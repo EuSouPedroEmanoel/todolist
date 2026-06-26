@@ -1,5 +1,7 @@
 from http import HTTPStatus
 
+from todolist.schemas import UserPublic
+
 
 def test_root_deve_retornar_ola_mundo(client):
 
@@ -27,15 +29,31 @@ def test_create_user(client):
     }
 
 
-def test_read_users(client):
+def test_read_users_blank(client):
     response = client.get('/users/')
     assert response.status_code == HTTPStatus.OK
-    assert response.json() == {
-        'users': [{'id': 1, 'username': 'alice', 'email': 'alice@exemple.com'}]
-    }
+    assert response.json() == {'users': []}
 
 
-def test_update_user(client):
+def test_read_users_fill(client, user):
+
+    user_schema = UserPublic.model_validate(user).model_dump()
+    response = client.get('/users/')
+    assert response.status_code == HTTPStatus.OK
+    assert response.json() == {'users': [user_schema]}
+
+    def test_read_user_by_id(client):
+        response = client.get('/users/1')
+
+        assert response.status_code == HTTPStatus.OK
+        assert response.json() == {
+            'username': 'Pedro',
+            'email': 'pedro@email.ai',
+            'id': 1,
+        }
+
+
+def test_update_user(client, user):
     response = client.put(
         '/users/1',
         json={
@@ -53,25 +71,12 @@ def test_update_user(client):
     }
 
 
-def test_read_user_by_id(client):
-    response = client.get('/users/1')
+def test_delete_user(client, user):
+    response = client.delete(f'/users/{user.id}')
 
     assert response.status_code == HTTPStatus.OK
     assert response.json() == {
-        'username': 'Pedro',
-        'email': 'pedro@email.ai',
-        'id': 1,
-    }
-
-
-def test_delete_user(client):
-    response = client.delete('/users/1')
-
-    assert response.status_code == HTTPStatus.OK
-    assert response.json() == {
-        'username': 'Pedro',
-        'email': 'pedro@email.ai',
-        'id': 1,
+        'message': 'User Deleted'
     }
 
 

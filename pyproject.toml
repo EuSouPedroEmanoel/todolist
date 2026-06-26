@@ -45,10 +45,10 @@ quote-style = 'single'
 pythonpath = '.'
 addopts = '-p no:warnings'
 
-[tool.coverage.run]
-omit = [
-    "todolist/settings.py",
-]
+# [tool.coverage.run]
+# omit = [
+#     "todolist/settings.py",
+# ]
 
 [tool.taskipy.tasks]
 lint = 'ruff check'
