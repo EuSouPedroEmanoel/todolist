@@ -5,6 +5,10 @@ __pycache__/
 *.py[codz]
 *$py.class
 
+# Project stuff
+database.db
+.idea/
+
 # C extensions
 *.so
 
